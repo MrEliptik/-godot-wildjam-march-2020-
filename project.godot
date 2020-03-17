@@ -19,7 +19,24 @@ config/name="Godot-wildjam-march- 2020"
 run/main_scene="res://game.tscn"
 config/icon="res://icon.png"
 
+[display]
+
+mouse_cursor/custom_image="res://art/crosshair.png"
+
+[input]
+
+ui_r_click={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":2,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+ui_l_click={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+
 [rendering]
 
-environment/default_clear_color=Color( 0.101961, 0, 0.0509804, 1 )
+environment/default_clear_color=Color( 0.0392157, 0.0392157, 0.0392157, 1 )
 environment/default_environment="res://default_env.tres"
