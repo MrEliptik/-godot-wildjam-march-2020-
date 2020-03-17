@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://art/tilesheet/monochrome_transparent.png" type="Texture" id=2]
 [ext_resource path="res://effects/black.png" type="Texture" id=3]
+[ext_resource path="res://candle.tscn" type="PackedScene" id=4]
+[ext_resource path="res://game.gd" type="Script" id=5]
 
 [sub_resource type="OccluderPolygon2D" id=1]
 polygon = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
@@ -34,11 +36,8 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 } ]
 0/z_index = 0
 
-[sub_resource type="OccluderPolygon2D" id=4]
-cull_mode = 1
-polygon = PoolVector2Array( 1.39999, -0.850006, 0.449997, 600.5, 1022.65, 600.5, 1024.55, -0.850006 )
-
 [node name="Game" type="Node2D"]
+script = ExtResource( 5 )
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource( 3 )
@@ -47,6 +46,8 @@ cell_custom_transform = Transform2D( 16, 0, 0, 16, 0, 0 )
 format = 1
 tile_data = PoolIntArray( 327696, 0, 0, 327697, 0, 0, 327698, 0, 0, 327699, 0, 0, 327700, 0, 0, 327701, 0, 0, 327702, 0, 0, 327703, 0, 0, 327704, 0, 0, 327705, 0, 0, 327706, 0, 0, 327707, 0, 0, 393228, 0, 0, 393229, 0, 0, 393230, 0, 0, 393231, 0, 0, 393244, 0, 0, 393245, 0, 0, 393246, 0, 0, 393247, 0, 0, 393248, 0, 0, 458761, 0, 0, 458762, 0, 0, 458763, 0, 0, 458784, 0, 0, 458785, 0, 0, 458786, 0, 0, 524296, 0, 0, 524297, 0, 0, 524323, 0, 0, 524324, 0, 0, 524325, 0, 0, 589831, 0, 0, 589832, 0, 0, 589861, 0, 0, 655367, 0, 0, 655398, 0, 0, 720903, 0, 0, 720934, 0, 0, 786439, 0, 0, 786470, 0, 0, 851976, 0, 0, 852006, 0, 0, 917512, 0, 0, 917513, 0, 0, 917542, 0, 0, 983050, 0, 0, 983051, 0, 0, 983052, 0, 0, 983053, 0, 0, 983054, 0, 0, 983055, 0, 0, 983056, 0, 0, 983057, 0, 0, 983076, 0, 0, 983077, 0, 0, 1048593, 0, 0, 1048594, 0, 0, 1048606, 0, 0, 1048607, 0, 0, 1048608, 0, 0, 1048609, 0, 0, 1048610, 0, 0, 1048611, 0, 0, 1048612, 0, 0, 1114131, 0, 0, 1114132, 0, 0, 1114133, 0, 0, 1114136, 0, 0, 1114137, 0, 0, 1114138, 0, 0, 1114139, 0, 0, 1114140, 0, 0, 1114141, 0, 0, 1179670, 0, 0, 1179671, 0, 0, 1179672, 0, 0 )
 
+[node name="CandleContainer" type="Node" parent="."]
+
 [node name="Light2D" type="Light2D" parent="."]
 position = Vector2( 512.973, 299.358 )
 scale = Vector2( 0.534732, 0.553199 )
@@ -54,9 +55,10 @@ texture = ExtResource( 3 )
 energy = 0.0
 mode = 3
 
-[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
-visible = false
-occluder = SubResource( 4 )
-
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 326, 195 )
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+
+[node name="Candle" parent="." instance=ExtResource( 4 )]
+position = Vector2( 589.973, 204.772 )
