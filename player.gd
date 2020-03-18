@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 signal r_click(pos)
+signal fired_shot
 
 export (int) var speed = 200
 
@@ -20,23 +21,29 @@ func get_input():
 		velocity = Vector2(0, speed).rotated(rotation)
 	if Input.is_action_pressed('ui_left'):
 		velocity = Vector2(0, -speed).rotated(rotation)
-	if Input.is_action_pressed('ui_r_click'):
+	if Input.is_action_just_pressed('ui_r_click'):
 		emit_signal("r_click", get_global_mouse_position())
+	if Input.is_action_just_pressed('ui_l_click') and $RayCast2D.is_colliding():
+		emit_signal("fired_shot", $RayCast2D.get_collision_point())
 
 func _physics_process(delta):
 	get_input()
-	
-	
-	# Note: this assumes you are using a action for the mouse.
-	# you might need to replace this with a different method to detect
-	# whether the mouse has been clicked.
-	if (Input.is_action_just_pressed("ui_l_click")):
-		var mouse_position = get_global_mouse_position()
-		$RayCast2D.set_cast_to(mouse_position.rotated(deg2rad(-90)))
+
+	if velocity != Vector2(0, 0):
+		$AnimatedSprite.play("hold")
+		var one_is_playing = false
+		for footstep in $Footsteps.get_children():
+			if footstep.is_playing():
+				one_is_playing = true
+		if !one_is_playing:
+			pass
+			#$Footsteps.get_child(randi()%$Footsteps.get_child_count()).play()
+	else:
+		$AnimatedSprite.play("idle")
 		
 	if $RayCast2D.is_colliding():
 		var enemy = $RayCast2D.get_collider()
-			
+		print(enemy)
 			
 	velocity = move_and_slide(velocity)
 
