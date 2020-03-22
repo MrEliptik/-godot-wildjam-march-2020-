@@ -20,6 +20,9 @@ func update_bullet(bullet):
 		get_node('Bullets/HBoxContainer/TextureRect' + str(i)).visible = true
 	for i in range(bullet_max - bullet):
 		get_node('Bullets/HBoxContainer/TextureRect' + str(i)).visible = false
+		
+func update_bomb(bomb):
+	$BombContainer/HBoxContainer3/BombNb.text = str(bomb)
 
 func _on_Timer_timeout():
 	$AnimationPlayer.play("notif_disappear")
