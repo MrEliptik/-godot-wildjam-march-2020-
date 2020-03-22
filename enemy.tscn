@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://art/ennemies/zoimbie1_stand.png" type="Texture" id=1]
 [ext_resource path="res://art/ennemies/zoimbie1_hold.png" type="Texture" id=2]
@@ -83,11 +83,8 @@ tracks/0/keys = {
 [sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="StyleBoxFlat" id=6]
-bg_color = Color( 1, 1, 1, 1 )
-
-[sub_resource type="RectangleShape2D" id=7]
-extents = Vector2( 304.028, 193.689 )
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 237.131, 193.689 )
 
 [node name="Enemy" type="KinematicBody2D"]
 scale = Vector2( 0.45, 0.45 )
@@ -106,10 +103,11 @@ stream = ExtResource( 3 )
 autoplay = true
 max_distance = 250.0
 
-[node name="SFX" type="Node" parent="."]
-
-[node name="Die" type="AudioStreamPlayer" parent="SFX"]
+[node name="Die" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 4 )
+max_distance = 300.0
+
+[node name="SFX" type="Node" parent="."]
 
 [node name="Attack" type="AudioStreamPlayer" parent="SFX"]
 stream = ExtResource( 5 )
@@ -126,7 +124,6 @@ margin_top = -20.1684
 margin_right = -18.0
 margin_bottom = 20.8316
 custom_styles/fg = SubResource( 5 )
-custom_styles/bg = SubResource( 6 )
 percent_visible = false
 __meta__ = {
 "_edit_use_anchors_": false
@@ -135,10 +132,24 @@ __meta__ = {
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2( 303.891, -5.81356 )
-shape = SubResource( 7 )
-[connection signal="finished" from="SFX/Die" to="." method="_on_Die_finished"]
+position = Vector2( 236.062, -2.09693 )
+shape = SubResource( 6 )
+
+[node name="AttackArea" type="Area2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AttackArea"]
+polygon = PoolVector2Array( 10.3601, -0.744239, 14.2681, 39.8386, 49.4399, 16.0901, 49.4399, -13.6706, 18.4767, -39.5234 )
+
+[node name="AttackDelay" type="Timer" parent="."]
+wait_time = 0.504
+
+[node name="AttackCooldown" type="Timer" parent="."]
+[connection signal="finished" from="Die" to="." method="_on_Die_finished"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="value_changed" from="HealthBar" to="." method="_on_HealthBar_value_changed"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
 [connection signal="body_exited" from="Area2D" to="." method="_on_Area2D_body_exited"]
+[connection signal="body_entered" from="AttackArea" to="." method="_on_AttackArea_body_entered"]
+[connection signal="body_exited" from="AttackArea" to="." method="_on_AttackArea_body_exited"]
+[connection signal="timeout" from="AttackDelay" to="." method="_on_AttackDelay_timeout"]
+[connection signal="timeout" from="AttackCooldown" to="." method="_on_AttackCooldown_timeout"]
