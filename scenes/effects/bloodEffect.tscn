@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://scenes/effects/bloodEffect.gd" type="Script" id=1]
+[ext_resource path="res://effects/dirt_01.png" type="Texture" id=2]
+
+[sub_resource type="Gradient" id=1]
+offsets = PoolRealArray( 0, 0.823708, 1 )
+colors = PoolColorArray( 0.108339, 0.384766, 0.0255508, 1, 0.0722047, 0.197266, 0.0523987, 1, 0.0901413, 0.271484, 0.0699921, 0.12549 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
+
+[sub_resource type="ParticlesMaterial" id=3]
+emission_shape = 1
+emission_sphere_radius = 40.92
+flag_disable_z = true
+spread = 97.82
+flatness = 0.28
+gravity = Vector3( 0, 98, 0 )
+initial_velocity = 288.05
+initial_velocity_random = 0.64
+angular_velocity = 62.61
+angular_velocity_random = 0.05
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+color_ramp = SubResource( 2 )
+
+[node name="BloodEffect" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Particles2D" type="Particles2D" parent="."]
+scale = Vector2( 0.015, 0.015 )
+amount = 9
+lifetime = 4.16
+speed_scale = 2.68
+process_material = SubResource( 3 )
+texture = ExtResource( 2 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.5
+autostart = true
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
