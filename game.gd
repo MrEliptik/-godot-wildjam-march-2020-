@@ -1,8 +1,13 @@
 extends Node2D
 
 signal pickup(object)
+signal damage(value)
 
 const candle = preload('res://candle.tscn')
+const bomb = preload('res://bomb.tscn')
+
+const BOMB_DAMAGE = 300
+const MED_KIT_HEAL = 50
 
 export var hit_effect: PackedScene
 export var blood_effect: PackedScene
@@ -14,7 +19,8 @@ enum COLLECTABLES {
 	GUN_SUPPRESSED,
 	RIFLE,
 	MED_KIT,
-	AMMO
+	AMMO,
+	BOMB
 }
 
 var collectables_str = {
@@ -22,15 +28,16 @@ var collectables_str = {
 	COLLECTABLES.GUN_SUPPRESSED: "Silencer",
 	COLLECTABLES.RIFLE: "Rifle",
 	COLLECTABLES.MED_KIT: "Med kit",
-	COLLECTABLES.AMMO: "Ammo"
+	COLLECTABLES.AMMO: "Ammo",
+	COLLECTABLES.BOMB: "Bomb"
 }
 
 var objects = {
 	"Chest_0": [COLLECTABLES.GUN],
 	"Chest_1": [COLLECTABLES.AMMO],
-	"Chest_2": [COLLECTABLES.GUN],
-	"Chest_3": [COLLECTABLES.GUN],
-	"Chest_4": [COLLECTABLES.GUN]
+	"Chest_2": [COLLECTABLES.BOMB, COLLECTABLES.AMMO],
+	"Chest_3": [COLLECTABLES.MED_KIT],
+	"Chest_4": [COLLECTABLES.BOMB]
 }
 
 # Called when the node enters the scene tree for the first time.
@@ -46,6 +53,10 @@ func _ready():
 		
 	for enemy in $EnemiesContainer.get_children():
 		enemy.connect('die', self, 'on_enemy_die')
+		enemy.connect('attack', self, 'on_enemy_attack')
+		
+	for destructable in $DestructableContainer.get_children():
+		destructable.connect('destroyed', self, 'on_destructable_destroyed')
 	
 func _input(event):
 	if event is InputEventMouseButton and Input.is_action_just_pressed("ui_l_click"):
@@ -75,9 +86,11 @@ func generate_blood_effect(hit_pos):
 	tmp.position = hit_pos
 
 func on_r_click(pos):
-	var c = candle.instance()
-	c.global_position = pos
-	$CandleContainer.add_child(c)
+	var b = bomb.instance()
+	b.global_position = (player.global_position + player.get_node('BombEmission').position.rotated(player.rotation))
+	b.connect('explode', self, 'on_bomb_explode')
+	$BombContainer.add_child(b)
+	$CanvasLayer/HUD.update_bomb(player.bomb)
 
 func _on_Player_fired_shot(hit_pos):
 	$CanvasLayer/HUD.update_bullet(player.bullet)
@@ -108,7 +121,14 @@ func on_player_chest(chest):
 			$CanvasLayer/HUD.update_bullet(player.bullet)
 			$CanvasLayer/HUD/Bullets.visible = true
 		elif obj == COLLECTABLES.MED_KIT:
-			player.health = 100
+			player.health += MED_KIT_HEAL
+			if player.health > 100: player.health = 100
+			$CanvasLayer/HUD.set_health(player.health)
+			
+		elif obj == COLLECTABLES.BOMB:
+			player.bomb = 3
+			$CanvasLayer/HUD.update_bomb(3)
+			$CanvasLayer/HUD/BombContainer .visible = true
 		
 	$CanvasLayer/HUD.set_notification('You got: ' + loot + '!')
 	
@@ -118,3 +138,20 @@ func on_enemy_hit(enemy):
 
 func on_enemy_die(enemy):
 	$EnemiesContainer.remove_child(enemy)
+	
+func on_enemy_attack(value):
+	$CanvasLayer/HUD.set_health(player.health)
+	
+func on_bomb_explode(bomb):
+	for body in bomb.get_node('AreaExplosion').get_overlapping_bodies():
+		if body is KinematicBody2D:
+			if body.get_parent().name == 'BombContainer': return
+			body.health -= BOMB_DAMAGE
+			if body.name == 'Player':
+				$CanvasLayer/HUD.set_health(player.health)
+		if body is StaticBody2D:
+			if body.get_parent().name == 'ChestsContainer': return
+			body.destroy()
+
+func on_destructable_destroyed(destructable):
+	$DestructableContainer.remove_child(destructable)
