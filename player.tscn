@@ -5,7 +5,6 @@
 [ext_resource path="res://player.gd" type="Script" id=3]
 [ext_resource path="res://effects/light_player.png" type="Texture" id=4]
 [ext_resource path="res://effects/cone_light_player.png" type="Texture" id=5]
-[ext_resource path="res://crosshair.tscn" type="PackedScene" id=6]
 [ext_resource path="res://camera2D.gd" type="Script" id=7]
 [ext_resource path="res://art/player/soldier1_machine.png" type="Texture" id=8]
 [ext_resource path="res://art/player/soldier1_silencer.png" type="Texture" id=9]
@@ -43,29 +42,14 @@ animations = [ {
 "name": "rifle_bw",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 8 ) ],
-"loop": true,
-"name": "rifle",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 23 ) ],
-"loop": true,
-"name": "silencer_bw",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 25 ) ],
-"loop": true,
-"name": "idle_bw",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 26 ) ],
-"loop": true,
-"name": "gun_bw",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 1 ) ],
 "loop": true,
 "name": "hold_bw",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 8 ) ],
+"loop": true,
+"name": "rifle",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 27 ) ],
@@ -73,14 +57,29 @@ animations = [ {
 "name": "hold",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 9 ) ],
+"loop": true,
+"name": "silencer",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 26 ) ],
+"loop": true,
+"name": "gun_bw",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 23 ) ],
+"loop": true,
+"name": "silencer_bw",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 10 ) ],
 "loop": true,
 "name": "machine_gun_reload",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 9 ) ],
+"frames": [ ExtResource( 25 ) ],
 "loop": true,
-"name": "silencer",
+"name": "idle_bw",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 11 ) ],
@@ -96,7 +95,34 @@ polygon = PoolVector2Array( 8.67753, 20.8729, 18.4651, 17.8143, 17.2416, 7.82284
 extents = Vector2( 19.2953, 21.3707 )
 
 [sub_resource type="Animation" id=4]
-resource_name = "move"
+resource_name = "die"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 324.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("AnimatedSprite:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1e-05, 1e-05 ) ]
+}
+
+[sub_resource type="Animation" id=5]
 length = 0.6
 loop = true
 tracks/0/type = "value"
@@ -119,7 +145,7 @@ colors = PoolColorArray( 1, 1, 1, 1, 0.905273, 0.869359, 0.622375, 1, 0.988235, 
 [sub_resource type="GradientTexture" id=7]
 gradient = SubResource( 6 )
 
-[sub_resource type="ParticlesMaterial" id=5]
+[sub_resource type="ParticlesMaterial" id=8]
 flag_disable_z = true
 direction = Vector3( 0, 1, 0 )
 gravity = Vector3( 98, 0, 0 )
@@ -134,7 +160,6 @@ script = ExtResource( 3 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 6.12, 0 )
-rotation = -0.0872665
 frames = SubResource( 1 )
 animation = "idle_bw"
 
@@ -162,14 +187,13 @@ current = true
 zoom = Vector2( 0.7, 0.7 )
 script = ExtResource( 7 )
 
-[node name="Crosshair" parent="." instance=ExtResource( 6 )]
-visible = false
-position = Vector2( -50.4354, 0 )
-
 [node name="RayCast2D" type="RayCast2D" parent="."]
 rotation = -1.5708
 enabled = true
 cast_to = Vector2( 0, 500 )
+
+[node name="BombEmission" type="Node2D" parent="."]
+position = Vector2( 32.5076, 0.797734 )
 
 [node name="Footsteps" type="Node" parent="."]
 
@@ -217,7 +241,8 @@ stream = ExtResource( 29 )
 stream = ExtResource( 30 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/move = SubResource( 4 )
+anims/die = SubResource( 4 )
+anims/move = SubResource( 5 )
 
 [node name="Particles2D" type="Particles2D" parent="."]
 position = Vector2( 46.5623, 8.07358 )
@@ -226,6 +251,5 @@ emitting = false
 amount = 1
 lifetime = 0.1
 one_shot = true
-visibility_rect = Rect2( -100, -100, 200, 200 )
-process_material = SubResource( 5 )
+process_material = SubResource( 8 )
 texture = ExtResource( 28 )

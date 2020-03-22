@@ -12,6 +12,8 @@ var bullet_impact_pos = Vector2(0, 0)
 var close_to_object = false
 var bullet = 7
 var health = 100
+var bomb = 0
+var dead = false
 
 enum GUN{
 	NO,
@@ -26,7 +28,8 @@ enum COLLECTABLES {
 	GUN_SUPPRESSED,
 	RIFLE,
 	MED_KIT,
-	AMMO
+	AMMO,
+	BOMB
 }
 
 var gun_node_sfx = {
@@ -66,8 +69,9 @@ func get_input():
 	if Input.is_action_pressed('ui_left'):
 		velocity = Vector2(0, -speed).rotated(rotation)
 	if Input.is_action_just_pressed('ui_r_click'):
-		pass
-		#emit_signal("r_click", get_global_mouse_position())
+		if bomb == 0: return
+		bomb -= 1
+		emit_signal("r_click", get_global_mouse_position())
 	if Input.is_action_just_pressed('ui_l_click'):
 		if current_gun == GUN.NO: return
 		
@@ -94,6 +98,11 @@ func get_input():
 
 func _physics_process(delta):
 	get_input()
+	
+	if dead: return
+	if health <= 0: 
+		$AnimationPlayer.play("die")
+		dead = true
 
 	if velocity != Vector2(0, 0) and current_gun == GUN.NO:
 		$AnimatedSprite.play("hold_bw")
