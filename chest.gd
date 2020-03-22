@@ -10,7 +10,7 @@ func _ready():
 
 func _on_Area2D_body_entered(body):
 	if opened: return
-	if body is StaticBody2D or body is TileMap: return
+	if body.name != 'Player': return
 	$AnimatedSprite.modulate = Color('fcf2c2')
 	$AnimatedSprite.play('opened')
 	$Open.play()
