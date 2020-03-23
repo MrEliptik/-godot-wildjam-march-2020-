@@ -4,6 +4,9 @@ signal die(enemy)
 signal attack(force)
 signal loot(object)
 
+const normal_cursor = preload('res://art/crosshair.png')
+const hit_cursor = preload('res://art/crosshair_hit.png')
+
 const MID_LIMIT = 50
 const LOW_LIMIT = 30
 const EXTREME_LIMIT = 15 
@@ -114,7 +117,9 @@ func _on_Area2D_body_entered(body):
 		target_obj = body
 
 func _on_Area2D_body_exited(body):
-	target_obj = null
+	if body.name == 'Player':
+		target_obj = null
+		velocity = Vector2(0, 0)
 
 func _on_AttackArea_body_entered(body):
 	if body.name == 'Player':
@@ -122,12 +127,14 @@ func _on_AttackArea_body_entered(body):
 		$AttackDelay.start()
 
 func _on_AttackArea_body_exited(body):
-	attack_target = null
-	$SFX/Attack.stop()
+	if body.name == 'Player':
+		attack_target = null
+		$SFX/Attack.stop()
 
 func _on_AttackDelay_timeout():
 	if attack_target != null:
 		print('Attack')
+		$AnimationPlayer.play('attack')
 		emit_signal("attack", attack_force)
 		last_running_sound_pos = $SFX/Attack.get_playback_position()
 		$SFX/Attack.play(last_running_sound_pos)
@@ -140,6 +147,7 @@ func _on_AttackDelay_timeout():
 func _on_AttackCooldown_timeout():
 	if attack_target != null:
 		print('Attack')
+		$AnimationPlayer.play('attack')
 		emit_signal("attack", attack_force)
 		last_running_sound_pos = $SFX/Attack.get_playback_position()
 		$SFX/Attack.play(last_running_sound_pos)
@@ -148,3 +156,9 @@ func _on_AttackCooldown_timeout():
 		# Set cooldown timer for next attack
 		$AttackCooldown.start()
 		pass
+
+func _on_BodyArea_mouse_entered():
+	Input.set_custom_mouse_cursor(hit_cursor)
+
+func _on_BodyArea_mouse_exited():
+	Input.set_custom_mouse_cursor(normal_cursor)
