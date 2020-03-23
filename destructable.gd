@@ -7,9 +7,9 @@ func _ready():
 	pass # Replace with function body.
 
 func destroy():
+	$CollisionShape2D.disabled = true
 	$Desctrution.play()
 	$AnimationPlayer.play('destruct')
-	$CollisionShape2D.disabled = true
 
 func _on_Desctrution_finished():
 	emit_signal('destroyed', self)
