@@ -1,0 +1,123 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://fonts/mini_square_font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://scenes/ui/deathScreen.gd" type="Script" id=2]
+[ext_resource path="res://fonts/Kenney Mini Square.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://art/objects/skull.png" type="Texture" id=4]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.423529, 0.00784314, 0.00784314, 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.294118, 0.00392157, 0.00392157, 1 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.521569, 0, 0, 1 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 48
+font_data = ExtResource( 3 )
+
+[node name="DeathScreen" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 191.0
+margin_right = 960.0
+margin_bottom = 251.0
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer"]
+margin_left = 361.0
+margin_right = 397.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 36, 36 )
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 6
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer"]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 401.0
+margin_right = 416.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 15, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_left = 420.0
+margin_right = 540.0
+margin_bottom = 60.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.521569, 0, 0, 1 )
+text = "DEAD"
+align = 1
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/HBoxContainer"]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 544.0
+margin_right = 559.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 15, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect2" type="TextureRect" parent="VBoxContainer/HBoxContainer"]
+margin_left = 563.0
+margin_right = 599.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 36, 36 )
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 6
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer"]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 255.0
+margin_right = 960.0
+margin_bottom = 285.0
+rect_min_size = Vector2( 0, 30 )
+
+[node name="Button" type="Button" parent="VBoxContainer"]
+margin_left = 330.0
+margin_top = 289.0
+margin_right = 630.0
+margin_bottom = 349.0
+rect_min_size = Vector2( 300, 40 )
+size_flags_horizontal = 4
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
+custom_styles/focus = SubResource( 3 )
+custom_styles/normal = SubResource( 4 )
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+custom_colors/font_color_pressed = Color( 0.4, 0.4, 0.4, 1 )
+text = "RESTART"
+[connection signal="mouse_entered" from="VBoxContainer/Button" to="." method="_on_Button_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/Button" to="." method="_on_Button_mouse_exited"]
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_Button_pressed"]
