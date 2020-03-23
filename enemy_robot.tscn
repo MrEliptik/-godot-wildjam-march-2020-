@@ -1,0 +1,86 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://art/enemies/robot1_machine.png" type="Texture" id=1]
+[ext_resource path="res://art/enemies/robot1_reload.png" type="Texture" id=2]
+[ext_resource path="res://audio/sfx/gun/gunshot_rifle.wav" type="AudioStream" id=3]
+[ext_resource path="res://audio/sfx/gun/gun_empty.wav" type="AudioStream" id=4]
+[ext_resource path="res://enemy_robot.gd" type="Script" id=5]
+[ext_resource path="res://robot_attack.tres" type="Animation" id=6]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 2 ) ],
+"loop": true,
+"name": "reload",
+"speed": 0.0
+}, {
+"frames": [ ExtResource( 1 ) ],
+"loop": true,
+"name": "gun",
+"speed": 0.0
+} ]
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 1, 1, 1, 1 )
+
+[node name="EnemyRobot" type="KinematicBody2D"]
+scale = Vector2( 0.45, 0.45 )
+z_index = -1
+input_pickable = true
+script = ExtResource( 5 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+animation = "reload"
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PoolVector2Array( -0.490166, 21.8737, 9.82444, 20.9996, 15.9433, 16.9787, 14.3699, 8.23749, 16.2929, 2.29347, 15.244, -0.853355, 20.8383, -12.7414, 6.15314, -20.084, -9.05653, -21.1329, -13.7768, -15.7134, -14.1264, -6.79737, -16.9236, 0.0207634, -13.7768, 9.11161, -13.4271, 17.678, -8.88171, 21.1745 )
+
+[node name="BodyArea" type="Area2D" parent="."]
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="BodyArea"]
+polygon = PoolVector2Array( -0.490166, 21.8737, 9.82444, 20.9996, 15.9433, 16.9787, 14.3699, 8.23749, 16.2929, 2.29347, 15.244, -0.853355, 20.8383, -12.7414, 6.15314, -20.084, -9.05653, -21.1329, -13.7768, -15.7134, -14.1264, -6.79737, -16.9236, 0.0207634, -13.7768, 9.11161, -13.4271, 17.678, -8.88171, 21.1745 )
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+margin_left = -35.0
+margin_top = 21.0
+margin_right = 5.0
+margin_bottom = 35.0
+rect_rotation = -90.0
+custom_styles/fg = SubResource( 2 )
+rounded = true
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/attack = ExtResource( 6 )
+
+[node name="AttackArea" type="Area2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AttackArea"]
+position = Vector2( -1.1339, 2.59974 )
+scale = Vector2( 1.11143, 1.32809 )
+polygon = PoolVector2Array( 8.6451, -10.6421, 193.008, -65.7701, 208.823, -38.6579, 213.116, -0.700928, 207.242, 31.3818, 193.118, 60.6983, 8.19323, 10.3699 )
+
+[node name="Gunshot" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 3 )
+max_distance = 450.0
+
+[node name="GunEmpty" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 4 )
+max_distance = 450.0
+
+[node name="Die" type="AudioStreamPlayer2D" parent="."]
+
+[node name="AttackDelay" type="Timer" parent="."]
+wait_time = 0.633
+
+[node name="AttackCooldown" type="Timer" parent="."]
+[connection signal="mouse_entered" from="BodyArea" to="." method="_on_BodyArea_mouse_entered"]
+[connection signal="mouse_exited" from="BodyArea" to="." method="_on_BodyArea_mouse_exited"]
+[connection signal="body_entered" from="AttackArea" to="." method="_on_AttackArea_body_entered"]
+[connection signal="body_exited" from="AttackArea" to="." method="_on_AttackArea_body_exited"]
+[connection signal="timeout" from="AttackDelay" to="." method="_on_AttackDelay_timeout"]
+[connection signal="timeout" from="AttackCooldown" to="." method="_on_AttackCooldown_timeout"]
