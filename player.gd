@@ -3,6 +3,7 @@ extends KinematicBody2D
 signal r_click(pos)
 signal hit_enemy(enemy)
 signal fired_shot
+signal die
 
 export (int) var speed = 200
 
@@ -102,6 +103,7 @@ func _physics_process(delta):
 	if dead: return
 	if health <= 0: 
 		$AnimationPlayer.play("die")
+		emit_signal('die')
 		dead = true
 
 	if velocity != Vector2(0, 0) and current_gun == GUN.NO:

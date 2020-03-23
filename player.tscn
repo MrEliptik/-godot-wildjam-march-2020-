@@ -42,9 +42,9 @@ animations = [ {
 "name": "rifle_bw",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 1 ) ],
+"frames": [ ExtResource( 11 ) ],
 "loop": true,
-"name": "hold_bw",
+"name": "gun",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 8 ) ],
@@ -52,14 +52,19 @@ animations = [ {
 "name": "rifle",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 1 ) ],
+"loop": true,
+"name": "hold_bw",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 27 ) ],
 "loop": true,
 "name": "hold",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 9 ) ],
+"frames": [ ExtResource( 10 ) ],
 "loop": true,
-"name": "silencer",
+"name": "machine_gun_reload",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 26 ) ],
@@ -72,19 +77,14 @@ animations = [ {
 "name": "silencer_bw",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 10 ) ],
-"loop": true,
-"name": "machine_gun_reload",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 25 ) ],
 "loop": true,
 "name": "idle_bw",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 11 ) ],
+"frames": [ ExtResource( 9 ) ],
 "loop": true,
-"name": "gun",
+"name": "silencer",
 "speed": 5.0
 } ]
 
