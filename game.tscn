@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=2]
+[gd_scene load_steps=49 format=2]
 
 [ext_resource path="res://player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://art/tilesheet/monochrome_transparent.png" type="Texture" id=2]
@@ -8,9 +8,10 @@
 [ext_resource path="res://scenes/effects/hitEffect.tscn" type="PackedScene" id=6]
 [ext_resource path="res://enemy.tscn" type="PackedScene" id=7]
 [ext_resource path="res://chest.tscn" type="PackedScene" id=8]
-[ext_resource path="res://hud.tscn" type="PackedScene" id=9]
+[ext_resource path="res://scenes/ui/hud.tscn" type="PackedScene" id=9]
 [ext_resource path="res://scenes/effects/bloodEffect.tscn" type="PackedScene" id=10]
 [ext_resource path="res://destructable.tscn" type="PackedScene" id=11]
+[ext_resource path="res://enemy_robot.tscn" type="PackedScene" id=12]
 
 [sub_resource type="OccluderPolygon2D" id=1]
 polygon = PoolVector2Array( 7.43329, 1.37329, 15.108, 5.55951, 9.52637, 14.1645, 0.456238, 7.88519 )
@@ -739,6 +740,12 @@ position = Vector2( -232.208, 1362.94 )
 rotation = -2.4679
 z_index = -1
 
+[node name="EnemyRobot" parent="EnemiesContainer" instance=ExtResource( 12 )]
+position = Vector2( -706.481, 1192.99 )
+
+[node name="EnemyRobot2" parent="EnemiesContainer" instance=ExtResource( 12 )]
+position = Vector2( -780.894, 1207.22 )
+
 [node name="ChestsContainer" type="Node" parent="."]
 
 [node name="Chest_0" parent="ChestsContainer" instance=ExtResource( 8 )]
@@ -821,6 +828,7 @@ position = Vector2( -433.811, 1175.08 )
 rotation = -0.193732
 
 [node name="DarkMask" type="Light2D" parent="."]
+visible = false
 position = Vector2( 647.581, 1209.06 )
 scale = Vector2( 1.67135, 2.23784 )
 texture = ExtResource( 3 )
