@@ -24,6 +24,7 @@ config/icon="res://icon.png"
 
 window/size/width=960
 window/size/height=540
+window/size/resizable=false
 mouse_cursor/custom_image="res://art/crosshair.png"
 
 [input]
@@ -74,4 +75,3 @@ ui_l_click={
 [rendering]
 
 environment/default_clear_color=Color( 0.0392157, 0.0392157, 0.0392157, 1 )
-environment/default_environment="res://default_env.tres"
