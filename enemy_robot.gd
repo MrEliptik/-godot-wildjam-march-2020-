@@ -49,8 +49,13 @@ var loot_chance = {
 func _ready():
 	randomize()
 	set_health(health)
+	
+func _draw():
+	draw_set_transform(Vector2(0, 0), deg2rad(-90), Vector2(1.0, 1.0))
+	draw_line($RayCast2D.position, ($RayCast2D.position + Vector2(0, 290)), Color(0.8, 0, 0))
 
 func _physics_process(delta):
+	update()
 	if die_anim_finished and die_sound_finished:
 		emit_signal('die', self)
 		# Back to false to prevent multiple signals
@@ -63,10 +68,9 @@ func _physics_process(delta):
 	if health <= 0:
 		emit_signal('loot', random_loot())
 		$CollisionPolygon2D.disabled = true
-		$Breath.stop()
 		$Die.play()
 		$HealthBar.visible = false
-		$AnimationPlayer.play('die')
+		$AnimationPlayer.play('enemy_die')
 		dead = true
 		return
 		
@@ -75,11 +79,24 @@ func _physics_process(delta):
 		look_at(target)
 		velocity = target * speed * delta
 		
+	if attack_target != null:
+		look_at(attack_target.position)
+		
 	if velocity != Vector2(0, 0): $AnimationPlayer.play('move')
 	else: pass #$AnimationPlayer.play('idle')
 	
 	velocity = move_and_slide(velocity)
 
+func attack_animation():
+	$AnimatedSprite.play('gun')
+	$AnimationPlayer.play('attack')
+	$Gunshot.play()
+	# Attack
+	emit_signal("attack", attack_force)
+	attack_target.health -= attack_force
+	# Set cooldown timer for next attack
+	$AttackCooldown.start()
+	
 func set_health(value):
 	$HealthBar.value = value
 	if value > MID_LIMIT:
@@ -120,31 +137,16 @@ func _on_AttackArea_body_entered(body):
 func _on_AttackArea_body_exited(body):
 	if body.name == 'Player':
 		attack_target = null
-		$SFX/Attack.stop()
+		$Gunshot.stop()
+		$AnimatedSprite.play('reload')
 
 func _on_AttackDelay_timeout():
 	if attack_target != null:
-		print('Attack')
-		$AnimationPlayer.play('attack')
-		emit_signal("attack", attack_force)
-		$Gunshot.play()
-		# Attack
-		attack_target.health -= attack_force
-		# Set cooldown timer for next attack
-		$AttackCooldown.start()
-		pass
+		attack_animation()
 
 func _on_AttackCooldown_timeout():
 	if attack_target != null:
-		print('Attack')
-		$AnimationPlayer.play('attack')
-		emit_signal("attack", attack_force)
-		$Gunshot.play()
-		# Attack
-		attack_target.health -= attack_force
-		# Set cooldown timer for next attack
-		$AttackCooldown.start()
-		pass
+		attack_animation()
 
 func _on_BodyArea_mouse_entered():
 	Input.set_custom_mouse_cursor(hit_cursor)

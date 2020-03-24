@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://art/enemies/robot1_machine.png" type="Texture" id=1]
 [ext_resource path="res://art/enemies/robot1_reload.png" type="Texture" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://audio/sfx/gun/gun_empty.wav" type="AudioStream" id=4]
 [ext_resource path="res://enemy_robot.gd" type="Script" id=5]
 [ext_resource path="res://robot_attack.tres" type="Animation" id=6]
+[ext_resource path="res://enemy_die.tres" type="Animation" id=7]
+[ext_resource path="res://effects/muzzle_04.png" type="Texture" id=8]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -23,6 +25,21 @@ animations = [ {
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 1, 1, 1, 1 )
 
+[sub_resource type="Gradient" id=4]
+offsets = PoolRealArray( 0, 0.279635, 0.547112, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 0.884766, 0.740493, 0.421646, 1, 0.955566, 0.843936, 0.597229, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=5]
+gradient = SubResource( 4 )
+
+[sub_resource type="ParticlesMaterial" id=3]
+flag_disable_z = true
+gravity = Vector3( 0, 98, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+angle = 180.0
+color_ramp = SubResource( 5 )
+
 [node name="EnemyRobot" type="KinematicBody2D"]
 scale = Vector2( 0.45, 0.45 )
 z_index = -1
@@ -31,7 +48,7 @@ script = ExtResource( 5 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 1 )
-animation = "reload"
+animation = "gun"
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 polygon = PoolVector2Array( -0.490166, 21.8737, 9.82444, 20.9996, 15.9433, 16.9787, 14.3699, 8.23749, 16.2929, 2.29347, 15.244, -0.853355, 20.8383, -12.7414, 6.15314, -20.084, -9.05653, -21.1329, -13.7768, -15.7134, -14.1264, -6.79737, -16.9236, 0.0207634, -13.7768, 9.11161, -13.4271, 17.678, -8.88171, 21.1745 )
@@ -56,13 +73,14 @@ __meta__ = {
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/attack = ExtResource( 6 )
+anims/enemy_die = ExtResource( 7 )
 
 [node name="AttackArea" type="Area2D" parent="."]
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AttackArea"]
 position = Vector2( -1.1339, 2.59974 )
 scale = Vector2( 1.11143, 1.32809 )
-polygon = PoolVector2Array( 8.6451, -10.6421, 193.008, -65.7701, 208.823, -38.6579, 213.116, -0.700928, 207.242, 31.3818, 193.118, 60.6983, 8.19323, 10.3699 )
+polygon = PoolVector2Array( -1.53723, -17.2012, 209.241, -81.6852, 257.757, -41.0841, 272.841, -1.84787, 257.349, 39.7767, 209.649, 79.6953, -0.721837, 13.8466 )
 
 [node name="Gunshot" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 3 )
@@ -78,6 +96,20 @@ max_distance = 450.0
 wait_time = 0.633
 
 [node name="AttackCooldown" type="Timer" parent="."]
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+rotation = -1.5708
+cast_to = Vector2( 0, 290 )
+
+[node name="Particles2D" type="Particles2D" parent="."]
+position = Vector2( 40.7812, 10.875 )
+rotation = -1.5708
+scale = Vector2( 0.08, 0.08 )
+emitting = false
+amount = 5
+lifetime = 0.1
+process_material = SubResource( 3 )
+texture = ExtResource( 8 )
 [connection signal="mouse_entered" from="BodyArea" to="." method="_on_BodyArea_mouse_entered"]
 [connection signal="mouse_exited" from="BodyArea" to="." method="_on_BodyArea_mouse_exited"]
 [connection signal="body_entered" from="AttackArea" to="." method="_on_AttackArea_body_entered"]
