@@ -6,6 +6,7 @@
 [ext_resource path="res://audio/sfx/zombie/zombie_dying.wav" type="AudioStream" id=4]
 [ext_resource path="res://audio/sfx/zombie/zombie_attack_1.wav" type="AudioStream" id=5]
 [ext_resource path="res://enemy.gd" type="Script" id=6]
+[ext_resource path="res://enemy_die.tres" type="Animation" id=7]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -20,11 +21,10 @@ animations = [ {
 "speed": 0.0
 } ]
 
-[sub_resource type="RectangleShape2D" id=7]
+[sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 16.4949, 21.5383 )
 
-[sub_resource type="Animation" id=2]
-resource_name = "attack"
+[sub_resource type="Animation" id=3]
 length = 1.8
 loop = true
 tracks/0/type = "value"
@@ -40,7 +40,7 @@ tracks/0/keys = {
 "values": [ 0.0, -20.0, 8.0, 0.0, 20.0, -8.0, 0.0 ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=4]
 length = 2.0
 loop = true
 tracks/0/type = "value"
@@ -56,34 +56,7 @@ tracks/0/keys = {
 "values": [ Vector2( 1, 1 ), Vector2( 0.98, 0.98 ) ]
 }
 
-[sub_resource type="Animation" id=4]
-length = 0.5
-tracks/0/type = "value"
-tracks/0/path = NodePath("AnimatedSprite:rotation_degrees")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ 0.0, -316.0 ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("AnimatedSprite:scale")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 0.994, 0.994 ), Vector2( 1e-05, 1e-05 ) ]
-}
-
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=6]
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("AnimatedSprite:rotation_degrees")
@@ -98,7 +71,7 @@ tracks/0/keys = {
 "values": [ -5.0, 5.0 ]
 }
 
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 1, 1, 1, 1 )
 
 [node name="Enemy" type="KinematicBody2D"]
@@ -107,6 +80,7 @@ input_pickable = true
 script = ExtResource( 6 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+scale = Vector2( 0.994, 0.994 )
 frames = SubResource( 1 )
 animation = "move"
 
@@ -117,7 +91,7 @@ polygon = PoolVector2Array( 17.514, -15.3717, 17.6037, -8.37158, 15.2703, -5.948
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BodyArea"]
 position = Vector2( 1.14146, 0.760972 )
-shape = SubResource( 7 )
+shape = SubResource( 2 )
 
 [node name="Breath" type="AudioStreamPlayer2D" parent="."]
 scale = Vector2( 2.22222, 2.22222 )
@@ -136,17 +110,17 @@ stream = ExtResource( 5 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "breath"
-anims/attack = SubResource( 2 )
-anims/breath = SubResource( 3 )
-anims/die = SubResource( 4 )
-anims/move = SubResource( 5 )
+anims/attack = SubResource( 3 )
+anims/breath = SubResource( 4 )
+anims/die = ExtResource( 7 )
+anims/move = SubResource( 6 )
 
 [node name="HealthBar" type="ProgressBar" parent="."]
 margin_left = -22.0
 margin_top = -20.1684
 margin_right = -18.0
 margin_bottom = 20.8316
-custom_styles/fg = SubResource( 6 )
+custom_styles/fg = SubResource( 7 )
 percent_visible = false
 __meta__ = {
 "_edit_use_anchors_": false
@@ -157,7 +131,7 @@ __meta__ = {
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
 position = Vector2( -1.69496, 1.35405 )
 scale = Vector2( 0.864661, 1.00886 )
-polygon = PoolVector2Array( 4.27378, -16.5063, 264.983, -93.2619, 287.576, -67.1537, 296.614, 0.125054, 286.07, 76.4412, 263.979, 105.06, 1.67145, 13.6035 )
+polygon = PoolVector2Array( 4.27378, -16.5063, 225.964, -153.355, 287.576, -67.1537, 296.614, 0.125054, 286.441, 72.0902, 224.79, 167.2, 1.67145, 13.6035 )
 
 [node name="AttackArea" type="Area2D" parent="."]
 
