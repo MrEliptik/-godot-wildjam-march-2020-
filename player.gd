@@ -5,7 +5,7 @@ signal hit_enemy(enemy)
 signal fired_shot
 signal die
 
-export (int) var speed = 200
+export (int) var speed = 150
 
 var velocity = Vector2()
 var bullet_impact_pos = Vector2(0, 0)
@@ -15,6 +15,7 @@ var bullet = 7
 var health = 100
 var bomb = 0
 var dead = false
+var win = false
 
 enum GUN{
 	NO,
@@ -98,10 +99,11 @@ func get_input():
 		
 
 func _physics_process(delta):
+	if dead or win: return
+	
 	get_input()
 	
-	if dead: return
-	if health <= 0: 
+	if health <= 0:
 		$AnimationPlayer.play("die")
 		emit_signal('die')
 		dead = true
@@ -127,9 +129,23 @@ func _physics_process(delta):
 			
 	velocity = move_and_slide(velocity)
 
+func win():
+	win = true
+	$AnimationPlayer.stop()
+	$AnimatedSprite.play('idle')
+
 func on_pickup(object):
 	if object == GUN.GUN or object == GUN.GUN_SUPPRESSED or object == GUN.RIFLE:
 		current_gun = object
 		$Gunshot/Gun_pickup.play()
 	elif object == COLLECTABLES.AMMO:
 		$Gunshot/Ammo_pickup.play()
+		
+func take_damage(value):
+	$Camera2D.shake(0.4, 10, 5)
+	health -= value
+	if health < 0: health = 0
+	
+func take_heal(value):
+	health += value
+	if health > 100: health = 100
