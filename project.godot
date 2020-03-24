@@ -15,10 +15,14 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Godot-wildjam-march- 2020"
+config/name="Sight"
 run/main_scene="res://game.tscn"
 boot_splash/image="res://art/godot_jam_bg.png"
 config/icon="res://icon.png"
+
+[autoload]
+
+AmbiantMusic="*res://ambiantMusic.tscn"
 
 [display]
 
