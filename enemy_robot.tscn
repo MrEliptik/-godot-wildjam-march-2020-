@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://art/enemies/robot1_machine.png" type="Texture" id=1]
 [ext_resource path="res://art/enemies/robot1_reload.png" type="Texture" id=2]
@@ -25,6 +25,34 @@ animations = [ {
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 1, 1, 1, 1 )
 
+[sub_resource type="Animation" id=3]
+resource_name = "idle"
+length = 3.5
+loop = true
+tracks/0/type = "method"
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.5, 2, 3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "patrol_right"
+}, {
+"args": [  ],
+"method": "patrol_left"
+}, {
+"args": [  ],
+"method": "patrol_left"
+}, {
+"args": [  ],
+"method": "patrol_right"
+} ]
+}
+
 [sub_resource type="Gradient" id=4]
 offsets = PoolRealArray( 0, 0.279635, 0.547112, 1 )
 colors = PoolColorArray( 1, 1, 1, 1, 0.884766, 0.740493, 0.421646, 1, 0.955566, 0.843936, 0.597229, 1, 1, 1, 1, 0 )
@@ -32,7 +60,7 @@ colors = PoolColorArray( 1, 1, 1, 1, 0.884766, 0.740493, 0.421646, 1, 0.955566, 
 [sub_resource type="GradientTexture" id=5]
 gradient = SubResource( 4 )
 
-[sub_resource type="ParticlesMaterial" id=3]
+[sub_resource type="ParticlesMaterial" id=6]
 flag_disable_z = true
 gravity = Vector3( 0, 98, 0 )
 orbit_velocity = 0.0
@@ -47,8 +75,10 @@ input_pickable = true
 script = ExtResource( 5 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+rotation = -5.51524
 frames = SubResource( 1 )
-animation = "gun"
+animation = "reload"
+playing = true
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 polygon = PoolVector2Array( -0.490166, 21.8737, 9.82444, 20.9996, 15.9433, 16.9787, 14.3699, 8.23749, 16.2929, 2.29347, 15.244, -0.853355, 20.8383, -12.7414, 6.15314, -20.084, -9.05653, -21.1329, -13.7768, -15.7134, -14.1264, -6.79737, -16.9236, 0.0207634, -13.7768, 9.11161, -13.4271, 17.678, -8.88171, 21.1745 )
@@ -72,8 +102,10 @@ __meta__ = {
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "idle"
 anims/attack = ExtResource( 6 )
 anims/enemy_die = ExtResource( 7 )
+anims/idle = SubResource( 3 )
 
 [node name="AttackArea" type="Area2D" parent="."]
 
@@ -108,8 +140,10 @@ scale = Vector2( 0.08, 0.08 )
 emitting = false
 amount = 5
 lifetime = 0.1
-process_material = SubResource( 3 )
+process_material = SubResource( 6 )
 texture = ExtResource( 8 )
+
+[node name="Tween" type="Tween" parent="."]
 [connection signal="mouse_entered" from="BodyArea" to="." method="_on_BodyArea_mouse_entered"]
 [connection signal="mouse_exited" from="BodyArea" to="." method="_on_BodyArea_mouse_exited"]
 [connection signal="body_entered" from="AttackArea" to="." method="_on_AttackArea_body_entered"]

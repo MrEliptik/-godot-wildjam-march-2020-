@@ -36,10 +36,10 @@ enum COLLECTABLES {
 }
 
 var loot_chance = {
-	COLLECTABLES.AMMO: 0.2,
-	COLLECTABLES.MED_KIT: 0.15,
-	COLLECTABLES.BOMB: 0.05,
-	COLLECTABLES.NOTHING: 0.6,
+	COLLECTABLES.AMMO: 0.3,
+	COLLECTABLES.MED_KIT: 0.25,
+	COLLECTABLES.BOMB: 0.10,
+	COLLECTABLES.NOTHING: 0.35,
 	COLLECTABLES.GUN: 0,
 	COLLECTABLES.GUN_SUPPRESSED: 0,
 	COLLECTABLES.RIFLE: 0,
@@ -51,6 +51,7 @@ func _ready():
 	set_health(health)
 	
 func _draw():
+	if dead: return
 	draw_set_transform(Vector2(0, 0), deg2rad(-90), Vector2(1.0, 1.0))
 	draw_line($RayCast2D.position, ($RayCast2D.position + Vector2(0, 290)), Color(0.8, 0, 0))
 
@@ -72,6 +73,7 @@ func _physics_process(delta):
 		$HealthBar.visible = false
 		$AnimationPlayer.play('enemy_die')
 		dead = true
+		update()
 		return
 		
 	if target_obj != null:
@@ -88,12 +90,14 @@ func _physics_process(delta):
 	velocity = move_and_slide(velocity)
 
 func attack_animation():
+	$AnimationPlayer.stop()
+	if dead: return
 	$AnimatedSprite.play('gun')
 	$AnimationPlayer.play('attack')
 	$Gunshot.play()
 	# Attack
+	attack_target.take_damage(attack_force)
 	emit_signal("attack", attack_force)
-	attack_target.health -= attack_force
 	# Set cooldown timer for next attack
 	$AttackCooldown.start()
 	
@@ -118,6 +122,14 @@ func random_loot():
 			_max = chance
 			selected = obj
 	return selected
+	
+func patrol_left():
+	$Tween.interpolate_property(self, 'rotation', rotation, rotation - deg2rad(25), 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$Tween.start()
+
+func patrol_right():
+	$Tween.interpolate_property(self, 'rotation', rotation, rotation + deg2rad(25), 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$Tween.start()
 
 func _on_HealthBar_value_changed(value):
 	pass
@@ -139,6 +151,7 @@ func _on_AttackArea_body_exited(body):
 		attack_target = null
 		$Gunshot.stop()
 		$AnimatedSprite.play('reload')
+		$AnimationPlayer.play('idle')
 
 func _on_AttackDelay_timeout():
 	if attack_target != null:
