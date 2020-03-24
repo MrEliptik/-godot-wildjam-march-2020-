@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://fonts/mini_square_font.tres" type="DynamicFont" id=1]
 [ext_resource path="res://scenes/ui/deathScreen.gd" type="Script" id=2]
@@ -26,7 +26,29 @@ bg_color = Color( 0.521569, 0, 0, 1 )
 size = 48
 font_data = ExtResource( 3 )
 
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 0.247059, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.109804, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=9]
+bg_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="DynamicFont" id=10]
+size = 48
+font_data = ExtResource( 3 )
+
 [node name="DeathScreen" type="Control"]
+pause_mode = 2
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 2 )
@@ -118,6 +140,35 @@ custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 0.4, 0.4, 0.4, 1 )
 text = "RESTART"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -60.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button2" type="Button" parent="HBoxContainer"]
+margin_left = 330.0
+margin_right = 630.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 300, 40 )
+size_flags_horizontal = 4
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/focus = SubResource( 8 )
+custom_styles/normal = SubResource( 9 )
+custom_fonts/font = SubResource( 10 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+custom_colors/font_color_pressed = Color( 0.4, 0.4, 0.4, 1 )
+text = "QUIT"
 [connection signal="mouse_entered" from="VBoxContainer/Button" to="." method="_on_Button_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/Button" to="." method="_on_Button_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_Button_pressed"]
+[connection signal="mouse_entered" from="HBoxContainer/Button2" to="." method="_on_Button_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer/Button2" to="." method="_on_Button_mouse_exited"]
+[connection signal="pressed" from="HBoxContainer/Button2" to="." method="_on_Button2_pressed"]
