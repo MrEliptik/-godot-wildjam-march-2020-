@@ -40,7 +40,7 @@ var objects = {
 	"Chest_1": [COLLECTABLES.AMMO],
 	"Chest_2": [COLLECTABLES.BOMB, COLLECTABLES.AMMO],
 	"Chest_3": [COLLECTABLES.MED_KIT],
-	"Chest_4": [COLLECTABLES.BOMB]
+	"Chest_4": [COLLECTABLES.BOMB, COLLECTABLES.AMMO]
 }
 
 # Called when the node enters the scene tree for the first time.
