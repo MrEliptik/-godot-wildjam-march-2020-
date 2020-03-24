@@ -37,8 +37,8 @@ enum COLLECTABLES {
 
 var loot_chance = {
 	COLLECTABLES.AMMO: 0.2,
-	COLLECTABLES.MED_KIT: 0.15,
-	COLLECTABLES.BOMB: 0.05,
+	COLLECTABLES.MED_KIT: 0.1,
+	COLLECTABLES.BOMB: 0.1,
 	COLLECTABLES.NOTHING: 0.6,
 	COLLECTABLES.GUN: 0,
 	COLLECTABLES.GUN_SUPPRESSED: 0,
@@ -51,6 +51,7 @@ func _ready():
 	set_health(health)
 	
 func _draw():
+	if dead: return
 	draw_set_transform(Vector2(0, 0), deg2rad(-90), Vector2(1.0, 1.0))
 	draw_line($RayCast2D.position, ($RayCast2D.position + Vector2(0, 290)), Color(0, 0.8, 0))
 
@@ -71,6 +72,7 @@ func _physics_process(delta):
 		$HealthBar.visible = false
 		$AnimationPlayer.play('enemy_die')
 		dead = true
+		update()
 		return
 		
 	if target_obj != null:
@@ -85,14 +87,24 @@ func _physics_process(delta):
 	else: pass #$AnimationPlayer.play('idle')
 	
 	velocity = move_and_slide(velocity)
+	
+func patrol_left():
+	$Tween.interpolate_property(self, 'rotation', rotation, rotation - deg2rad(15), 1, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$Tween.start()
+
+func patrol_right():
+	$Tween.interpolate_property(self, 'rotation', rotation, rotation + deg2rad(15), 1, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$Tween.start()
 
 func attack_animation():
+	if dead: return
+	$AnimationPlayer.stop()
 	$AnimatedSprite.play('gun')
 	$AnimationPlayer.play('attack')
 	$Gunshot.play()
 	# Attack
+	attack_target.take_damage(attack_force)
 	emit_signal("attack", attack_force)
-	attack_target.health -= attack_force
 	# Set cooldown timer for next attack
 	$AttackCooldown.start()
 
@@ -138,6 +150,7 @@ func _on_AttackArea_body_exited(body):
 		attack_target = null
 		$Gunshot.stop()
 		$AnimatedSprite.play('idle')
+		$AnimationPlayer.play('idle')
 
 func _on_AttackDelay_timeout():
 	if attack_target != null:
