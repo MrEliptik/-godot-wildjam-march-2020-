@@ -145,7 +145,7 @@ text = "RESTART"
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = -60.0
+margin_top = -85.0
 alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -157,6 +157,7 @@ margin_right = 630.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 300, 40 )
 size_flags_horizontal = 4
+size_flags_vertical = 0
 custom_styles/hover = SubResource( 6 )
 custom_styles/pressed = SubResource( 7 )
 custom_styles/focus = SubResource( 8 )
