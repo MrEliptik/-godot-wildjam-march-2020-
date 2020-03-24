@@ -1,10 +1,13 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://art/enemies/hitman1_silencer.png" type="Texture" id=1]
 [ext_resource path="res://art/enemies/hitman1_stand.png" type="Texture" id=2]
 [ext_resource path="res://audio/sfx/gun/gun_empty.wav" type="AudioStream" id=3]
 [ext_resource path="res://audio/sfx/gun/gunshot_suppressed.wav" type="AudioStream" id=4]
 [ext_resource path="res://hitman_attack.tres" type="Animation" id=5]
+[ext_resource path="res://enemy_hitman.gd" type="Script" id=6]
+[ext_resource path="res://enemy_die.tres" type="Animation" id=7]
+[ext_resource path="res://effects/muzzle_05.png" type="Texture" id=8]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -15,25 +18,50 @@ animations = [ {
 }, {
 "frames": [ ExtResource( 1 ) ],
 "loop": true,
-"name": "attack",
+"name": "gun",
 "speed": 0.0
 } ]
 
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 17.2111, 20.3033 )
+
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="Gradient" id=5]
+offsets = PoolRealArray( 0, 0.343465, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 0.929688, 0.864092, 0.435791, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=6]
+gradient = SubResource( 5 )
+
+[sub_resource type="ParticlesMaterial" id=4]
+flag_disable_z = true
+gravity = Vector3( 0, 98, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+angle = -180.0
+color_ramp = SubResource( 6 )
 
 [node name="EnemyHitman" type="KinematicBody2D"]
 scale = Vector2( 0.45, 0.45 )
 z_index = -1
 input_pickable = true
+script = ExtResource( 6 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 1 )
-animation = "attack"
+animation = "gun"
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 visible = false
 polygon = PoolVector2Array( -5.50489, -19.3759, -18.8613, -19.7687, -22.3969, -6.01941, -24.3611, 1.05165, -22.004, 7.33705, -19.647, 19.9078, -2.3622, 21.4792, 9.42292, 15.1938, 25.1364, 11.2654, 15.3155, 5.37287, 2.35185, 3.01585 )
+
+[node name="BodyArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BodyArea"]
+position = Vector2( -6.92682, 0.670336 )
+shape = SubResource( 3 )
 
 [node name="HealthBar" type="ProgressBar" parent="."]
 margin_left = -41.3923
@@ -48,6 +76,7 @@ __meta__ = {
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/enemy_die = ExtResource( 7 )
 anims/hitman_attack = ExtResource( 5 )
 
 [node name="AttackArea" type="Area2D" parent="."]
@@ -55,7 +84,7 @@ anims/hitman_attack = ExtResource( 5 )
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AttackArea"]
 position = Vector2( 5.65394, 0.122931 )
 scale = Vector2( 1.09151, 1.15255 )
-polygon = PoolVector2Array( 4.42722, -13.8215, 198.611, -78.0596, 218.764, -49.0895, 224.222, -1.43567, 217.715, 45.7982, 201.76, 76.4478, 4.21729, 15.5685 )
+polygon = PoolVector2Array( -16.3046, -30.5228, 208.265, -92.8297, 286.191, -60.0298, 336.145, 0.523818, 286.857, 62.9698, 206.933, 92.6158, -17.1821, 30.9785 )
 
 [node name="Gunshot" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 4 )
@@ -68,3 +97,18 @@ stream = ExtResource( 3 )
 [node name="AttackDelay" type="Timer" parent="."]
 
 [node name="AttackCooldown" type="Timer" parent="."]
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+rotation = -1.5708
+cast_to = Vector2( 0, 360 )
+
+[node name="Particles2D" type="Particles2D" parent="."]
+position = Vector2( 37.268, 9.99646 )
+rotation = -1.5708
+scale = Vector2( 0.04, 0.06 )
+emitting = false
+amount = 1
+lifetime = 0.1
+one_shot = true
+process_material = SubResource( 4 )
+texture = ExtResource( 8 )
