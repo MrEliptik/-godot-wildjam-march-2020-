@@ -18,6 +18,7 @@ var attack_force = 20
 var dead = false
 
 var target_obj = null
+var target = null
 var attack_target = null
 
 var die_anim_finished = false
@@ -49,7 +50,7 @@ var loot_chance = {
 func _ready():
 	randomize()
 	set_health(health)
-
+	
 func _physics_process(delta):
 	if die_anim_finished and die_sound_finished:
 		emit_signal('die', self)
@@ -71,14 +72,25 @@ func _physics_process(delta):
 		return
 		
 	if target_obj != null:
-		var target = target_obj.global_position - global_position
-		look_at(target)
+		target = target_obj.position - position
+		look_at(target_obj.position)
 		velocity = target * speed * delta
 		
 	if velocity != Vector2(0, 0): $AnimationPlayer.play('move')
 	else: $AnimationPlayer.play('breath')
 	
 	velocity = move_and_slide(velocity)
+	
+func attack_animation():
+	if dead: return
+	$AnimationPlayer.play('attack')
+	last_running_sound_pos = $SFX/Attack.get_playback_position()
+	$SFX/Attack.play(last_running_sound_pos)
+	# Attack
+	attack_target.take_damage(attack_force)
+	emit_signal("attack", attack_force)
+	# Set cooldown timer for next attack
+	$AttackCooldown.start()
 
 func set_health(value):
 	$HealthBar.value = value
@@ -133,29 +145,11 @@ func _on_AttackArea_body_exited(body):
 
 func _on_AttackDelay_timeout():
 	if attack_target != null:
-		print('Attack')
-		$AnimationPlayer.play('attack')
-		emit_signal("attack", attack_force)
-		last_running_sound_pos = $SFX/Attack.get_playback_position()
-		$SFX/Attack.play(last_running_sound_pos)
-		# Attack
-		attack_target.health -= attack_force
-		# Set cooldown timer for next attack
-		$AttackCooldown.start()
-		pass
+		attack_animation()
 
 func _on_AttackCooldown_timeout():
 	if attack_target != null:
-		print('Attack')
-		$AnimationPlayer.play('attack')
-		emit_signal("attack", attack_force)
-		last_running_sound_pos = $SFX/Attack.get_playback_position()
-		$SFX/Attack.play(last_running_sound_pos)
-		# Attack
-		attack_target.health -= attack_force
-		# Set cooldown timer for next attack
-		$AttackCooldown.start()
-		pass
+		attack_animation()
 
 func _on_BodyArea_mouse_entered():
 	Input.set_custom_mouse_cursor(hit_cursor)

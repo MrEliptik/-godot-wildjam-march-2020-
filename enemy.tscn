@@ -56,7 +56,7 @@ tracks/0/keys = {
 "values": [ Vector2( 1, 1 ), Vector2( 0.98, 0.98 ) ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=5]
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("AnimatedSprite:rotation_degrees")
@@ -71,7 +71,7 @@ tracks/0/keys = {
 "values": [ -5.0, 5.0 ]
 }
 
-[sub_resource type="StyleBoxFlat" id=7]
+[sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 1, 1, 1, 1 )
 
 [node name="Enemy" type="KinematicBody2D"]
@@ -113,14 +113,14 @@ autoplay = "breath"
 anims/attack = SubResource( 3 )
 anims/breath = SubResource( 4 )
 anims/die = ExtResource( 7 )
-anims/move = SubResource( 6 )
+anims/move = SubResource( 5 )
 
 [node name="HealthBar" type="ProgressBar" parent="."]
 margin_left = -22.0
 margin_top = -20.1684
 margin_right = -18.0
 margin_bottom = 20.8316
-custom_styles/fg = SubResource( 7 )
+custom_styles/fg = SubResource( 6 )
 percent_visible = false
 __meta__ = {
 "_edit_use_anchors_": false
